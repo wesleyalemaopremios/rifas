@@ -86,8 +86,14 @@ async function gerarChavePix(valor) {
     console.log("Resposta da cobrança:", cobResponse.data);  // Verifique a resposta da cobrança
 
     // Verificando a URL do QR Code
-    const qrCodeUrl = cobResponse.data.loc.location;
+    let qrCodeUrl = cobResponse.data.loc.location;
     console.log("URL do QR Code:", qrCodeUrl);
+
+    // Verifica se a URL já começa com "https://", se não, adiciona
+    if (!qrCodeUrl.startsWith("https://")) {
+      qrCodeUrl = "https://" + qrCodeUrl;
+      console.log("URL corrigida:", qrCodeUrl);
+    }
 
     // Baixar a imagem do QR Code
     const qrCodeResponse = await axios.get(qrCodeUrl, { responseType: 'arraybuffer' });
