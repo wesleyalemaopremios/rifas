@@ -163,7 +163,7 @@ app.post("/verificar-pagamento", async (req, res) => {
       method: "GET",  // Aqui você usa GET para consultar o status do pagamento
       url: `https://pix-h.api.efipay.com.br/v2/pagamentos/${idPagamento}`, // A URL pode variar conforme o seu provedor
       headers: {
-        Authorization: `Bearer ${auth}`, // Use o token recebido anteriormente
+        Authorization: `Bearer ${token}`,  // Utilize o token de acesso obtido
         "Content-Type": "application/json",
       },
     };
