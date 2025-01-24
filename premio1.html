@@ -878,7 +878,7 @@ window.addEventListener('load', function() {
     const totalAmount = (totalValue * pricePerNumber).toFixed(2);
 
     try {
-      const response = await fetch("http://localhost:10000/gerar-chave-pix", {
+      const response = await fetch("https://localhost:10000/gerar-chave-pix", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -902,7 +902,7 @@ window.addEventListener('load', function() {
         // Verificação real de pagamento
         setInterval(async () => {
           try {
-            const paymentStatusResponse = await fetch("http://localhost:10000/gerar-chave-pix", {
+            const paymentStatusResponse = await fetch("https://localhost:10000/gerar-chave-pix", {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
