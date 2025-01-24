@@ -878,7 +878,7 @@ window.addEventListener('load', function() {
     const totalAmount = (totalValue * pricePerNumber).toFixed(2);
 
     try {
-      const response = await fetch("https://rifas-5ybb.onrender.com", {
+      const response = await fetch("https://rifas-5ybb.onrender.com/gerar-chave-pix", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -902,7 +902,7 @@ window.addEventListener('load', function() {
         // Verificação real de pagamento
         setInterval(async () => {
           try {
-            const paymentStatusResponse = await fetch("https://rifas-5ybb.onrender.com", {
+            const paymentStatusResponse = await fetch("https://rifas-5ybb.onrender.com/verificar-pagamento", {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
