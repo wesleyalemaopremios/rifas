@@ -67,7 +67,9 @@ const fs = require('fs');
     };
 
     const tokenResponse = await axios(configToken);
-    const token = tokenResponse.data.access_token;
+console.log("Resposta do token:", tokenResponse.data); // Verifique a resposta do token
+    const cobResponse = await axios(configCob);
+console.log("Resposta da cobrança:", cobResponse.data); // Verifique a resposta da cobrança
 
     // Log para verificar a resposta do token
     console.log("Token de acesso recebido:", token);
