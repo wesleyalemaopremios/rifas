@@ -21,14 +21,7 @@
         header img {
             height: 40px;
         }
-        .menu-btn {
-            font-size: 24px;
-            background: none;
-            border: none;
-            color: #ffffff;
-            cursor: pointer;
-        }
-	.container-edicao33 {
+        .container-edicao33 {
     width: 85%;
     max-width: 400px;
     margin: 20px auto;
@@ -277,15 +270,15 @@
                 opacity: 0;
             }
         }
-	.menuButton {
+	.menu-button {
         font-size: 24px;
         background: none;
         color: white;
         border: none;
         cursor: pointer;
         position: absolute;
-        right: 20px; /* Mantém o botão no canto direito */
-        top: 10px; /* Ajusta verticalmente */
+        right: 21px; /* Mantém o botão no canto direito */
+        top: 15px; /* Ajusta verticalmente */
     }
 
     .menu {
@@ -631,24 +624,25 @@
 </head>
 <body>
     <header>
-        <div class="header">
-            <img src="logo.png" alt="Logo Wesley Alemão">
-            <button class="menu-button" id="menuButton">☰</button>
-            <div class="menu" id="menu">
-                <div id="userPhone" style="display: none; margin-left: 5px;">
-    <img src="perfil.png" alt="Perfil" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
-    <span id="userPhoneText"></span>
-</div>
-                <a href="index.html">🏠 Início</a>
-                <a href="campanhas.html">⚡ Campanhas</a>
-                <a href="#numeros">📋 Meus Títulos</a>
-                <a href="ganhadores.html">🎉 Ganhadores</a>
-                <a href="entrar%20em%20contato.html">📧 Entre em contato</a>
-                <a href="termos.html">📜 Termos de uso</a>
-                <button id="entrarButton">Entrar</button>
-                <button id="sairButton" style="display: none;">Sair</button> <!-- Botão Sair -->
+    <div class="header">
+        <button class="menu-button" id="menuButton">☰</button>
+        <img src="logo.png" alt="Logo Wesley Alemão" class="logo">
+        <div class="menu" id="menu">
+            <div id="userPhone" style="display: none; margin-left: 5px;">
+                <img src="perfil.png" alt="Perfil" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
+                <span id="userPhoneText"></span>
             </div>
+            <a href="index.html">🏠 Início</a>
+            <a href="campanhas.html">⚡ Campanhas</a>
+            <a href="#numeros">📋 Meus Títulos</a>
+            <a href="ganhadores.html">🎉 Ganhadores</a>
+            <a href="entrar%20em%20contato.html">📧 Entre em contato</a>
+            <a href="termos.html">📜 Termos de uso</a>
+            <button id="entrarButton">Entrar</button>
+            <button id="sairButton" style="display: none;">Sair</button>
         </div>
+    </div>
+</header>
         <!-- Modal -->
         <div id="modal" class="modal">
             <div class="modal-content">
@@ -661,7 +655,6 @@
                 </div>
             </div>
         </div>
-    </header>
     <script>
         const modal = document.getElementById('modal');
 const closeButton = document.getElementById('closeButton');
