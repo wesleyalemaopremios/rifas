@@ -22,7 +22,9 @@ const CERT_PATH = './certificados/homologacao-680504-loja2.p12';
 // Função para obter o access_token
 async function getAccessToken() {
   try {
+    console.log('Iniciando a obtenção do access_token...');
     const certificado = fs.readFileSync(CERT_PATH);
+    console.log('Certificado lido com sucesso.');
 
     const agent = new https.Agent({
       pfx: certificado,
@@ -30,6 +32,7 @@ async function getAccessToken() {
     });
 
     const auth = Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString('base64');
+    console.log('Autenticação codificada com sucesso.');
 
     const response = await axios.post(
       `${EFIBANK_BASE_URL}/oauth/token`,
@@ -43,6 +46,7 @@ async function getAccessToken() {
       }
     );
 
+    console.log('Access token obtido com sucesso.');
     return response.data.access_token;
   } catch (error) {
     console.error('Erro ao obter o access_token:', error);
@@ -55,13 +59,17 @@ app.post('/gerar-chave-pix', async (req, res) => {
   const { valor } = req.body;
 
   if (!valor || valor <= 0) {
+    console.log('Valor inválido recebido:', valor);
     return res.status(400).json({ erro: 'Valor inválido.' });
   }
 
   try {
+    console.log('Iniciando processo de geração da chave Pix...');
     const accessToken = await getAccessToken();
 
     const certificado = fs.readFileSync(CERT_PATH);
+    console.log('Certificado lido com sucesso para geração do Pix.');
+
     const agent = new https.Agent({
       pfx: certificado,
       passphrase: '',
@@ -84,6 +92,7 @@ app.post('/gerar-chave-pix', async (req, res) => {
       }
     );
 
+    console.log('Chave Pix gerada com sucesso.');
     const pixData = response.data;
     return res.json({
       location: pixData.loc.location, // URL do QR Code
