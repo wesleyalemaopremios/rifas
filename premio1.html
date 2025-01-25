@@ -891,10 +891,11 @@ window.addEventListener('load', function() {
       if (data.pix) {
         pixKeyDiv.textContent = `${data.pix}`;
 
-        const qrCodeImage = document.createElement('img');
-        qrCodeImage.src = `https://${data.location}`;;
-        pixQrCode.innerHTML = '';  
-        pixQrCode.appendChild(qrCodeImage);
+const qrCodeImage = document.createElement('img');
+qrCodeImage.src = data.location.startsWith('http') ? data.location : `https://${data.location}`;
+pixQrCode.innerHTML = '';  
+pixQrCode.appendChild(qrCodeImage);
+
 
         // Exibindo o botão "Copiar chave Pix"
         copyButton.style.display = "inline-block"; 
