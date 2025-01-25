@@ -72,7 +72,7 @@ app.post('/gerar-chave-pix', async (req, res) => {
       {
         calendario: { expiracao: 3600 },
         valor: { original: valor.toFixed(2) },
-        chave: 'seu-email@example.com', // Substitua pela chave Pix cadastrada na sua conta Efí
+        chave: '3467e73a-9b39-48eb-a9bd-466cafc5666e', // Substitua pela chave Pix cadastrada na sua conta Efí
         solicitacaoPagador: 'Pagamento do título Wesley Alemão.',
       },
       {
