@@ -309,13 +309,49 @@
 	.centralizado {
   text-align: center;
 }
+	.modal {
+    display: none; /* Inicialmente oculto */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Fundo semitransparente */
+    justify-content: center;
+    align-items: center;
+    z-index: 1001; /* Garante que o modal esteja acima de outros elementos */
+}
+
+.modal-content {
+    background-color: #333;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    color: white;
+    width: 60%;
+    max-width: 400px;
+}
+
+.close-button {
+    color: white;
+    font-size: 30px;
+    font-weight: bold;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    cursor: pointer;
+}
+
+.close-button:hover {
+    color: red;
+}
     </style>
 </head>
 <body>
     <header>
         <div class="header">
             <img src="logo.png" alt="Logo Wesley Alemão">
-            <button class="menu-button" id="menu-button">☰</button>
+            <button class="menu-button" id="menuButton">☰</button>
             <div class="menu" id="menu">
                 <div id="userPhone" style="display: none; margin-left: 20px;">
     <img src="perfil.png" alt="Perfil" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
@@ -441,15 +477,15 @@ sairButton.addEventListener('click', function() {
 });
 
 // Menu dropdown
-const menu-button = document.getElementById('menu-button');
+const menuButton = document.getElementById('menuButton');
 const menu = document.getElementById('menu');
 
-menu-button.addEventListener('click', () => {
+menuButton.addEventListener('click', () => {
     menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
 });
 
 document.addEventListener('click', (event) => {
-    if (!menu.contains(event.target) && event.target !== menu-button) {
+    if (!menu.contains(event.target) && event.target !== menuButton) {
         menu.style.display = 'none';
     }
 });
@@ -610,14 +646,14 @@ window.addEventListener('load', function() {
         </div>
     </div>
     <script>
-        const menu-button = document.getElementById('menu-button');
+        const menuButton = document.getElementById('menuButton');
         const menu = document.getElementById('menu');
 
-        menu-button.addEventListener('click', () => {
+        menuButton.addEventListener('click', () => {
             menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
         });
         document.addEventListener('click', (event) => {
-            if (!menu.contains(event.target) && event.target !== menu-button) {
+            if (!menu.contains(event.target) && event.target !== menuButton) {
                 menu.style.display = 'none';
             }
         });
