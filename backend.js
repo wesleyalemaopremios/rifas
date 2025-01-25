@@ -1,155 +1,95 @@
-"use strict";
-const https = require("https");
-const axios = require("axios");
-const fs = require("fs");
-const express = require("express");
-const bodyParser = require("body-parser");
-const cors = require("cors");
+const express = require('express');
+const https = require('https');
+const fs = require('fs');
+const axios = require('axios');
+const bodyParser = require('body-parser');
 
-// Configurações do servidor
 const app = express();
 app.use(bodyParser.json());
-app.use(cors());
 
-// Caminho do certificado .p12
-const certificado = fs.readFileSync("./homologacao-680504-loja2.p12");
+// Configurações da API Efí Bank
+const EFIBANK_BASE_URL = 'https://pix-h.api.efipay.com.br'; // Ambiente de homologação
+const CLIENT_ID = 'Client_Id_893a3146c78f9edb6b98df343103080fe4063f60';
+const CLIENT_SECRET = 'Client_Secret_f6f2398a5fcd56c5f3efdcd7557a6a8ec7f96db9';
+const CERT_PATH = './certificados/homologacao-680504-loja2.p12';
 
-// Credenciais do PIX
-const credenciais = {
-  client_id: "Client_Id_81ae6fbca0e6de8d8ce690690289bfd6e2e1d7bf",
-  client_secret: "Client_Secret_57bd0d434850d5d8c578e01df13750a1a3ced239",
-};
-
-// Codificando as credenciais em base64
-const data_credentials = `${credenciais.client_id}:${credenciais.client_secret}`;
-const auth = Buffer.from(data_credentials).toString("base64");
-
-// Função para gerar chave Pix e QR Code
-async function gerarChavePix(valor) {
+// Função para obter o access_token
+async function getAccessToken() {
   try {
-    console.log("Iniciando a geração da chave Pix...");
+    const certificado = fs.readFileSync(CERT_PATH);
+
     const agent = new https.Agent({
       pfx: certificado,
-      passphrase: "", // Se houver senha, insira aqui
+      passphrase: '',
     });
 
-    // Configuração do token
-    const configToken = {
-      method: "POST",
-      url: "https://pix-h.api.efipay.com.br/oauth/token",
-      headers: {
-        Authorization: `Basic ${auth}`,
-        "Content-Type": "application/json",
-      },
-      httpsAgent: agent,
-      data: JSON.stringify({ grant_type: "client_credentials" }),
-    };
+    const auth = Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString('base64');
 
-    const tokenResponse = await axios(configToken);
-    const token = tokenResponse.data.access_token;
+    const response = await axios.post(
+      `${EFIBANK_BASE_URL}/oauth/token`,
+      { grant_type: 'client_credentials' },
+      {
+        headers: {
+          Authorization: `Basic ${auth}`,
+          'Content-Type': 'application/json',
+        },
+        httpsAgent: agent,
+      }
+    );
 
-    console.log("Token de acesso recebido:", token);
-
-    // Configurando a cobrança
-    const configCob = {
-      method: "POST",
-      url: "https://pix-h.api.efipay.com.br/v2/cob",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      httpsAgent: agent,
-      data: JSON.stringify({
-        calendario: { expiracao: 3600 },
-        valor: { original: valor.toFixed(2) },
-        chave: "mtt.h10@hotmail.com", // Substitua pela sua chave Pix
-        solicitacaoPagador: "Pagamento de títulos",
-      }),
-    };
-
-    console.log("Enviando solicitação de cobrança...");
-
-    const cobResponse = await axios(configCob);
-    console.log("Resposta da API Efí Bank:", cobResponse.data);
-
-    // Baixar a imagem do QR Code e converter para base64
-    const qrCodeUrl = cobResponse.data.loc.location;
-    const qrCodeResponse = await axios.get(`https://${qrCodeUrl}`, {
-      responseType: "arraybuffer",
-    });
-    const qrCodeBase64 = Buffer.from(qrCodeResponse.data, "binary").toString("base64");
-
-    return {
-      qrcode: `data:image/png;base64,${qrCodeBase64}`, // QR Code em base64
-      pixCopiaECola: cobResponse.data.pixCopiaECola,
-    };
+    return response.data.access_token;
   } catch (error) {
-    console.error("Erro ao gerar chave Pix:", error);
-    if (error.response) {
-      console.error("Resposta de erro da API:", error.response.data);
-    }
-    throw error;
+    console.error('Erro ao obter o access_token:', error);
+    throw new Error('Erro ao autenticar na API do Efí Bank.');
   }
 }
 
-// Rota para gerar a chave Pix
-app.post("/gerar-chave-pix", async (req, res) => {
-  try {
-    const { valor } = req.body;
+// Endpoint para gerar chave Pix e QR Code
+app.post('/gerar-chave-pix', async (req, res) => {
+  const { valor } = req.body;
 
-    if (!valor || isNaN(valor)) {
-      return res.status(400).json({ error: "Valor inválido" });
-    }
-
-    const qrcodeData = await gerarChavePix(parseFloat(valor));
-
-    res.json({
-      qrcode: qrcodeData.qrcode,
-      pixCopiaECola: qrcodeData.pixCopiaECola,
-    });
-  } catch (error) {
-    console.error("Erro ao gerar chave Pix:", error);
-    res.status(500).json({ error: "Erro ao gerar chave Pix" });
+  if (!valor || valor <= 0) {
+    return res.status(400).json({ erro: 'Valor inválido.' });
   }
-});
 
-// Rota para verificar o pagamento
-app.post("/verificar-pagamento", async (req, res) => {
   try {
-    const { txid } = req.body;
+    const accessToken = await getAccessToken();
 
-    if (!txid) {
-      return res.status(400).json({ error: "TXID é obrigatório" });
-    }
-
+    const certificado = fs.readFileSync(CERT_PATH);
     const agent = new https.Agent({
       pfx: certificado,
-      passphrase: "",
+      passphrase: '',
     });
 
-    // Configuração para consultar status do pagamento
-    const configConsulta = {
-      method: "GET",
-      url: `https://pix-h.api.efipay.com.br/v2/cob/${txid}`,
-      headers: {
-        Authorization: `Bearer ${auth}`,
-        "Content-Type": "application/json",
+    const response = await axios.post(
+      `${EFIBANK_BASE_URL}/v2/cob`,
+      {
+        calendario: { expiracao: 3600 },
+        valor: { original: valor.toFixed(2) },
+        chave: 'mtt.h10@hotmail.com', // Substitua pela chave Pix cadastrada na sua conta Efí
+        solicitacaoPagador: 'Pagamento do título Wesley Alemão.',
       },
-      httpsAgent: agent,
-    };
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        httpsAgent: agent,
+      }
+    );
 
-    const consultaResponse = await axios(configConsulta);
-    res.json(consultaResponse.data);
+    const pixData = response.data;
+    return res.json({
+      location: pixData.loc.location, // URL do QR Code
+      pix: pixData.txid, // Chave Pix gerada
+    });
   } catch (error) {
-    console.error("Erro ao verificar pagamento:", error);
-    if (error.response) {
-      console.error("Resposta de erro da API:", error.response.data);
-    }
-    res.status(500).json({ error: "Erro ao verificar pagamento" });
+    console.error('Erro ao gerar chave Pix:', error);
+    return res.status(500).json({ erro: 'Erro ao gerar chave Pix.' });
   }
 });
 
-// Iniciando o servidor
+// Servir na porta 3000
 const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
