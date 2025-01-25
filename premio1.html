@@ -892,7 +892,7 @@ window.addEventListener('load', function() {
         pixKeyDiv.textContent = `${data.pix}`;
 
         const qrCodeImage = document.createElement('img');
-        qrCodeImage.src = data.qrcode;
+        qrCodeImage.src = `https://${data.location}`;;
         pixQrCode.innerHTML = '';  
         pixQrCode.appendChild(qrCodeImage);
 
