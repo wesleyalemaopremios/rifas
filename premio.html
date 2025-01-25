@@ -891,10 +891,14 @@ window.addEventListener('load', function() {
       if (data.pix) {
         pixKeyDiv.textContent = `${data.pix}`;
 
-        const qrCodeImage = document.createElement('img');
-        qrCodeImage.src = `https://${data.location}`;
-        pixQrCode.innerHTML = '';  
-        pixQrCode.appendChild(qrCodeImage);
+if (data.location) {
+    qrCodeImage.src = data.location.startsWith('http') ? data.location : `https://${data.location}`;
+    pixQrCode.innerHTML = '';
+    pixQrCode.appendChild(qrCodeImage);
+} else {
+    pixQrCode.textContent = 'QR Code não disponível.';
+}
+
 
         // Exibindo o botão "Copiar chave Pix"
         copyButton.style.display = "inline-block"; 
