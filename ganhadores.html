@@ -441,15 +441,15 @@ sairButton.addEventListener('click', function() {
 });
 
 // Menu dropdown
-const menuButton = document.getElementById('menuButton');
+const menu-button = document.getElementById('menu-button');
 const menu = document.getElementById('menu');
 
-menuButton.addEventListener('click', () => {
+menu-button.addEventListener('click', () => {
     menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
 });
 
 document.addEventListener('click', (event) => {
-    if (!menu.contains(event.target) && event.target !== menuButton) {
+    if (!menu.contains(event.target) && event.target !== menu-button) {
         menu.style.display = 'none';
     }
 });
@@ -610,14 +610,14 @@ window.addEventListener('load', function() {
         </div>
     </div>
     <script>
-        const menuButton = document.getElementById('menuButton');
+        const menu-button = document.getElementById('menu-button');
         const menu = document.getElementById('menu');
 
-        menuButton.addEventListener('click', () => {
+        menu-button.addEventListener('click', () => {
             menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
         });
         document.addEventListener('click', (event) => {
-            if (!menu.contains(event.target) && event.target !== menuButton) {
+            if (!menu.contains(event.target) && event.target !== menu-button) {
                 menu.style.display = 'none';
             }
         });
