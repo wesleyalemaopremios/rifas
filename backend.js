@@ -15,8 +15,8 @@ app.use(cors({
 
 // Configurações da API Efí Bank
 const EFIBANK_BASE_URL = 'https://pix-h.api.efipay.com.br'; // Ambiente de homologação
-const CLIENT_ID = 'Client_Id_893a3146c78f9edb6b98df343103080fe4063f60';
-const CLIENT_SECRET = 'Client_Secret_f6f2398a5fcd56c5f3efdcd7557a6a8ec7f96db9';
+const CLIENT_ID = 'Client_Id_81ae6fbca0e6de8d8ce690690289bfd6e2e1d7bf';
+const CLIENT_SECRET = 'Client_Secret_57bd0d434850d5d8c578e01df13750a1a3ced239';
 const CERT_PATH = './certificados/homologacao-680504-loja2.p12';
 
 // Função para obter o access_token
