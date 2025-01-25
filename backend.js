@@ -3,9 +3,15 @@ const https = require('https');
 const fs = require('fs');
 const axios = require('axios');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const app = express();
 app.use(bodyParser.json());
+
+// Habilitar CORS para permitir requisições do frontend
+app.use(cors({
+  origin: 'https://wesleyalemaopremios.github.io' // Permitir apenas o frontend específico
+}));
 
 // Configurações da API Efí Bank
 const EFIBANK_BASE_URL = 'https://pix-h.api.efipay.com.br'; // Ambiente de homologação
@@ -66,7 +72,7 @@ app.post('/gerar-chave-pix', async (req, res) => {
       {
         calendario: { expiracao: 3600 },
         valor: { original: valor.toFixed(2) },
-        chave: 'mtt.h10@hotmail.com', // Substitua pela chave Pix cadastrada na sua conta Efí
+        chave: 'seu-email@example.com', // Substitua pela chave Pix cadastrada na sua conta Efí
         solicitacaoPagador: 'Pagamento do título Wesley Alemão.',
       },
       {
